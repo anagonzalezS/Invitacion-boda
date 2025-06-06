@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
 export default function MusicPlayer() {
   const audioRef = useRef(null);
@@ -25,18 +25,20 @@ export default function MusicPlayer() {
         style={{
           position: 'fixed',
           top: 0,
+          left: 0,
           width: '100%',
-          backgroundColor: '#fce4ec', // rosa pastel
+          backgroundColor: '#fce4ec',
           color: '#8B0000',
-          padding: '8px 0',
+          padding: '8px 12px',
           textAlign: 'center',
           fontWeight: 'bold',
-          fontSize: '14px',
+          fontSize: 'clamp(12px, 4vw, 16px)',
           zIndex: 1000,
           boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+          boxSizing: 'border-box',
         }}
       >
-        🎶 Música: "Un Pacto" &nbsp;
+        🎶 Música: "Un Pacto"
         <button
           onClick={handleToggle}
           style={{
@@ -44,8 +46,8 @@ export default function MusicPlayer() {
             color: 'white',
             border: 'none',
             borderRadius: '20px',
-            padding: '4px 12px',
-            fontSize: '12px',
+            padding: '6px 16px',
+            fontSize: 'clamp(11px, 3vw, 14px)',
             marginLeft: '10px',
             cursor: 'pointer',
           }}
@@ -58,6 +60,9 @@ export default function MusicPlayer() {
         <source src="/un_pacto.mp3" type="audio/mpeg" />
         Tu navegador no soporta el audio.
       </audio>
+
+      {/* Espacio para que no tape contenido */}
+      <div style={{ height: '48px' }} />
     </>
   );
 }

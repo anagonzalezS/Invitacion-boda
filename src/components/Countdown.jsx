@@ -19,12 +19,22 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
+  // Usamos setTimeout recursivo para mejor soporte en móviles
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    let timer;
 
-    return () => clearInterval(timer);
+    const tick = () => {
+      const newTimeLeft = calculateTimeLeft();
+      console.log('Countdown update:', newTimeLeft);
+      setTimeLeft(newTimeLeft);
+      if (newTimeLeft) {
+        timer = setTimeout(tick, 1000);
+      }
+    };
+
+    tick();
+
+    return () => clearTimeout(timer);
   }, [weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
@@ -54,7 +64,7 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
               {formatNumber(timeLeft.hours)}
             </div>
             <div className="time-segment">
-              <div className="time-label">Minutos</div>
+              <div className="time-label">Min.</div>
               {formatNumber(timeLeft.minutes)}
             </div>
             <div className="time-segment">
