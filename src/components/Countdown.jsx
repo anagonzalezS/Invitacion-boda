@@ -1,18 +1,25 @@
 import { useEffect, useState } from 'react';
 import './Countdown.css';
 
-export default function Countdown({ weddingDate = '2025-12-05T00:00:00-03:00' }) {
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [isMounted, setIsMounted] = useState(false);
-
+export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
   const calculateTimeLeft = () => {
-    const targetDate = new Date(weddingDate);
-    const now = new Date();
+    // Convertir weddingDate a Date en zona horaria 'America/Argentina/Buenos_Aires'
+    const targetDate = new Date(
+      new Date(weddingDate).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+    );
+    const now = new Date(
+      new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+    );
 
-    const diff = targetDate.getTime() - now.getTime();
+    const diff = targetDate - now;
 
     if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
     }
 
     return {
@@ -23,25 +30,15 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00-03:00' })
     };
   };
 
-  // Marca que ya estamos en cliente (solo renderizar el contador ahí)
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Actualiza el tiempo cada segundo solo en cliente
-  useEffect(() => {
-    if (!isMounted) return;
-
-    setTimeLeft(calculateTimeLeft());
-
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isMounted, weddingDate]);
-
-  if (!isMounted || timeLeft === null) return null;
+  }, [weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
