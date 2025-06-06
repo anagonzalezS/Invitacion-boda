@@ -2,34 +2,19 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const [mounted, setMounted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    days: '--',
-    hours: '--',
-    minutes: '--',
-    seconds: '--',
-  });
+  const [isClient, setIsClient] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
-    setMounted(true);
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!isClient) return;
 
     const calculateTimeLeft = () => {
-      const targetDate = new Date(
-        new Date(weddingDate).toLocaleString('en-US', {
-          timeZone: 'America/Argentina/Buenos_Aires',
-        })
-      );
-
-      const now = new Date(
-        new Date().toLocaleString('en-US', {
-          timeZone: 'America/Argentina/Buenos_Aires',
-        })
-      );
-
+      const now = new Date();
+      const targetDate = new Date(weddingDate);
       const diff = targetDate - now;
 
       if (diff <= 0) {
@@ -46,12 +31,14 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
 
     setTimeLeft(calculateTimeLeft());
 
-    const timerId = setInterval(() => {
+    const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearInterval(timerId);
-  }, [mounted, weddingDate]);
+    return () => clearInterval(interval);
+  }, [isClient, weddingDate]);
+
+  if (!isClient || !timeLeft) return null;
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -60,8 +47,6 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     timeLeft.hours === 0 &&
     timeLeft.minutes === 0 &&
     timeLeft.seconds === 0;
-
-  if (!mounted) return null; // ✅ evita errores en SSR
 
   return (
     <section className="background-fullscreen" aria-live="polite">
@@ -72,11 +57,9 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
           className="countdown-icon"
           aria-hidden="true"
         />
-
         <h2 className="countdown-title" role="heading" aria-level="2">
           {!isTimeZero ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
         </h2>
-
         {!isTimeZero ? (
           <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
             <div className="time-segment">
@@ -99,11 +82,9 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
         ) : (
           <p className="final-message">¡Felicidades a los novios!</p>
         )}
-
         <p className="sub-message">
           {!isTimeZero ? '¡Prepara todo para celebrar el amor!' : 'Disfruta cada momento'}
         </p>
-
         {!isTimeZero && (
           <button
             onClick={() => {
