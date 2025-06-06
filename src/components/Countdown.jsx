@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00-03:00' }) {
   const [timeLeft, setTimeLeft] = useState(null);
