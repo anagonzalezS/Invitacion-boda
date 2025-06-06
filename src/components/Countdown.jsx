@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react';
-import './Countdown.css';
 
-export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
+export default function Countdown({ weddingDate = '2025-12-05T00:00:00-03:00' }) {
   const [timeLeft, setTimeLeft] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const calculateTimeLeft = () => {
     const targetDate = new Date(weddingDate);
     const now = new Date();
-    const diff = targetDate - now;
+
+    const diff = targetDate.getTime() - now.getTime();
 
     if (diff <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
     return {
@@ -26,20 +22,25 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     };
   };
 
+  // Marca que ya estamos en cliente (solo renderizar el contador ahí)
   useEffect(() => {
-    // Primero actualiza el tiempo al montar
+    setIsMounted(true);
+  }, []);
+
+  // Actualiza el tiempo cada segundo solo en cliente
+  useEffect(() => {
+    if (!isMounted) return;
+
     setTimeLeft(calculateTimeLeft());
 
-    // Actualiza cada segundo
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [weddingDate]);
+  }, [isMounted, weddingDate]);
 
-  // Mientras se calcula la primera vez (en SSR o primera render), no renderices nada
-  if (timeLeft === null) return null;
+  if (!isMounted || timeLeft === null) return null;
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
