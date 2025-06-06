@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react';
 import './Countdown.css';
 
-export default function Countdown({ weddingDate = '2025-12-05' }) {
+export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const calculateTimeLeft = () => {
     const targetDate = new Date(weddingDate);
     const now = new Date();
@@ -24,23 +36,28 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
     };
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
   useEffect(() => {
+    if (!mounted) return;
+
+    // Actualiza el tiempo inmediatamente para que no haya delay
+    setTimeLeft(calculateTimeLeft());
+
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [weddingDate]);
+  }, [weddingDate, mounted]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
   const isTimeZero =
-    timeLeft?.days === 0 &&
-    timeLeft?.hours === 0 &&
-    timeLeft?.minutes === 0 &&
-    timeLeft?.seconds === 0;
+    timeLeft.days === 0 &&
+    timeLeft.hours === 0 &&
+    timeLeft.minutes === 0 &&
+    timeLeft.seconds === 0;
+
+  if (!mounted) return null; // No renderizamos nada hasta estar en cliente
 
   return (
     <section className="background-fullscreen" aria-live="polite">
