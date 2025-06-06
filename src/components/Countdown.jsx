@@ -1,32 +1,24 @@
 import { useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
   const calculateTimeLeft = () => {
-    // Convertir weddingDate a Date en zona horaria 'America/Argentina/Buenos_Aires'
-    const targetDate = new Date(
-      new Date(weddingDate).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-    );
-    const now = new Date(
-      new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-    );
+    // Parsear weddingDate en zona horaria correcta
+    const targetDate = DateTime.fromISO(weddingDate, { zone: 'America/Argentina/Buenos_Aires' });
+    const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
 
-    const diff = targetDate - now;
+    const diff = targetDate.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
 
-    if (diff <= 0) {
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
+    if (diff.seconds <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
     return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
+      days: Math.floor(diff.days),
+      hours: Math.floor(diff.hours),
+      minutes: Math.floor(diff.minutes),
+      seconds: Math.floor(diff.seconds),
     };
   };
 
