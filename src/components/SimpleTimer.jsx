@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function SimpleTimer() {
   const [seconds, setSeconds] = useState(0);
-  const [mounted, setMounted] = useState(false); // Evita errores de hidratación
+  const [mounted, setMounted] = useState(false);
+  const lastTime = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -11,14 +12,26 @@ export default function SimpleTimer() {
   useEffect(() => {
     if (!mounted) return;
 
-    const timer = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
+    const tick = (time) => {
+      if (!lastTime.current) {
+        lastTime.current = time;
+      }
 
-    return () => clearInterval(timer);
+      const delta = time - lastTime.current;
+
+      if (delta >= 1000) {
+        setSeconds((prev) => prev + 1);
+        lastTime.current = time;
+      }
+
+      requestAnimationFrame(tick);
+    };
+
+    const animationId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animationId);
   }, [mounted]);
 
-  if (!mounted) return null; // No mostrar hasta que monte
+  if (!mounted) return null;
 
   return (
     <div>
