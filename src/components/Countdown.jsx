@@ -2,38 +2,55 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const [timeLeft, setTimeLeft] = useState(null);
-
-  // Esta función calcula el tiempo restante sin zonas horarias
-  const calculateTimeLeft = () => {
-    const now = new Date();
-    const target = new Date(weddingDate);
-    const diff = target.getTime() - now.getTime();
-
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
-    };
-  };
+  const [isClient, setIsClient] = useState(false); // Detectar ejecución en cliente
+  const [timeLeft, setTimeLeft] = useState({
+    days: '--',
+    hours: '--',
+    minutes: '--',
+    seconds: '--',
+  });
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return; // Esperar a estar en cliente
+
+    const calculateTimeLeft = () => {
+      const targetDate = new Date(
+        new Date(weddingDate).toLocaleString('en-US', {
+          timeZone: 'America/Argentina/Buenos_Aires',
+        }),
+      );
+      const now = new Date(
+        new Date().toLocaleString('en-US', {
+          timeZone: 'America/Argentina/Buenos_Aires',
+        }),
+      );
+
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      };
+    };
+
+    setTimeLeft(calculateTimeLeft()); // Actualizar inicialmente
+
+    const timerId = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    // Primera ejecución
-    setTimeLeft(calculateTimeLeft());
-
-    return () => clearInterval(timer);
-  }, [weddingDate]);
-
-  if (!timeLeft) return null;
+    return () => clearInterval(timerId);
+  }, [isClient, weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -53,12 +70,12 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
           aria-hidden="true"
         />
 
-        <h2 className="countdown-title">
+        <h2 className="countdown-title" role="heading" aria-level="2">
           {!isTimeZero ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
         </h2>
 
         {!isTimeZero ? (
-          <div className="timer">
+          <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
             <div className="time-segment">
               <div className="time-label">Días</div>
               {formatNumber(timeLeft.days)}
@@ -87,9 +104,10 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
         {!isTimeZero && (
           <button
             onClick={() => {
-              document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' });
+              document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
             }}
             className="cta-button"
+            type="button"
           >
             Reservá tu lugar
           </button>
