@@ -27,29 +27,20 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    let animationFrameId;
-
-    const update = () => {
+    const timerId = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
-      animationFrameId = requestAnimationFrame(() => {
-        setTimeout(update, 1000);
-      });
-    };
+    }, 1000);
 
-    update();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => clearInterval(timerId);
   }, [weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
   const isTimeZero =
-    timeLeft?.days === 0 &&
-    timeLeft?.hours === 0 &&
-    timeLeft?.minutes === 0 &&
-    timeLeft?.seconds === 0;
+    timeLeft.days === 0 &&
+    timeLeft.hours === 0 &&
+    timeLeft.minutes === 0 &&
+    timeLeft.seconds === 0;
 
   return (
     <section className="background-fullscreen" aria-live="polite">
