@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const [isClient, setIsClient] = useState(false); // Detectar ejecución en cliente
+  const [mounted, setMounted] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: '--',
     hours: '--',
@@ -11,22 +11,23 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
   });
 
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!isClient) return; // Esperar a estar en cliente
+    if (!mounted) return;
 
     const calculateTimeLeft = () => {
       const targetDate = new Date(
         new Date(weddingDate).toLocaleString('en-US', {
           timeZone: 'America/Argentina/Buenos_Aires',
-        }),
+        })
       );
+
       const now = new Date(
         new Date().toLocaleString('en-US', {
           timeZone: 'America/Argentina/Buenos_Aires',
-        }),
+        })
       );
 
       const diff = targetDate - now;
@@ -43,14 +44,14 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
       };
     };
 
-    setTimeLeft(calculateTimeLeft()); // Actualizar inicialmente
+    setTimeLeft(calculateTimeLeft());
 
     const timerId = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timerId);
-  }, [isClient, weddingDate]);
+  }, [mounted, weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -59,6 +60,8 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     timeLeft.hours === 0 &&
     timeLeft.minutes === 0 &&
     timeLeft.seconds === 0;
+
+  if (!mounted) return null; // ✅ evita errores en SSR
 
   return (
     <section className="background-fullscreen" aria-live="polite">
