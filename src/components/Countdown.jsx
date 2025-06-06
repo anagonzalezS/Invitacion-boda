@@ -4,8 +4,9 @@ import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
   const calculateTimeLeft = () => {
-    // Parsear weddingDate en zona horaria correcta
-    const targetDate = DateTime.fromISO(weddingDate, { zone: 'America/Argentina/Buenos_Aires' });
+    const targetDate = DateTime.fromISO(weddingDate, {
+      zone: 'America/Argentina/Buenos_Aires',
+    });
     const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
 
     const diff = targetDate.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
@@ -22,15 +23,20 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     };
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    return () => clearInterval(timer);
+    // Ejecutar al menos una vez apenas carga
+    setTimeLeft(calculateTimeLeft());
+
+    return () => clearInterval(interval);
   }, [weddingDate]);
+
+  if (!timeLeft) return null; // Evita renderizado inicial incorrecto
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
