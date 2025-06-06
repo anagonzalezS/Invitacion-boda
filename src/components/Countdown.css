@@ -51,15 +51,19 @@
   font-family: 'Courier New', monospace;
 }
 
+/* Cada segmento: suficientemente ancho para que "Segundos" quepa */
 .time-segment {
-  min-width: 60px;
-  flex: 1 1 60px;
+  flex: 1 1 70px;  /* base mínimo 70px */
+  min-width: 70px;
 }
 
+/* Etiqueta con palabra que puede romperse si es necesario */
 .time-label {
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.3rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .sub-message {
@@ -110,13 +114,17 @@
   }
 
   .timer {
-    font-size: 2rem;
+    font-size: 1.8rem; /* font-size más pequeño para móvil */
     gap: 1rem;
   }
 
   .time-segment {
+    flex: 1 1 50px; /* menos ancho mínimo */
     min-width: 50px;
-    flex: 1 1 50px;
+  }
+
+  .time-label {
+    font-size: 0.85rem;
   }
 
   .sub-message {

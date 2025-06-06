@@ -44,7 +44,7 @@ export default function RSVPForm() {
           <input
             type="text"
             required
-            placeholder="Nombre y Apellido/Acompañante"
+            placeholder="Nombre y Apellido"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
           />

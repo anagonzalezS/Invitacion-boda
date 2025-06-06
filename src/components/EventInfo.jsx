@@ -29,13 +29,13 @@ export default function EventInfo() {
           <p className="event-info">
             📍 <strong>Salón Brisas del Campo</strong>
           </p>
-          <p className="event-info">📌 Córdoba Capital</p>
+          <p className="event-info">📌 Cabildo 1576 CABA</p>
           <p className="event-info">📅 15 de diciembre de 2025 – 🕗 20:00 hs</p>
 
           <div className="map-container">
             <iframe
               title="Mapa de ubicación Salón Brisas del Campo"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13622.58072098941!2d-64.2979871!3d-31.4121545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9432990cbfd3e7d3%3A0x2fa6570cdce187f5!2sSal%C3%B3n%20Brisas%20del%20Campo!5e0!3m2!1ses!2sar!4v1684435339607!5m2!1ses!2sar"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3285.4892277578265!2d-58.45472142488687!3d-34.56648565553174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb5d022fe0639%3A0xf60e53ada34e7f64!2sAv.%20Cabildo%201576%2C%20C1426ABP%20Cdad.%20Aut%C3%B3noma%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1749240142289!5m2!1ses-419!2sar"
               loading="lazy"
               allowFullScreen
               referrerPolicy="no-referrer-when-downgrade"

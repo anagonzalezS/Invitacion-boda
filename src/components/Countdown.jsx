@@ -58,7 +58,7 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
               {formatNumber(timeLeft.minutes)}
             </div>
             <div className="time-segment">
-              <div className="time-label">Segundos</div>
+              <div className="time-label">Seg.</div>
               {formatNumber(timeLeft.seconds)}
             </div>
           </div>
@@ -72,15 +72,14 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
 
         {timeLeft && (
           <button
-  onClick={() => {
-    document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
-  }}
-  className="cta-button"
-  type="button"
->
-  Reservá tu lugar
-</button>
-
+            onClick={() => {
+              document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
+            }}
+            className="cta-button"
+            type="button"
+          >
+            Reservá tu lugar
+          </button>
         )}
       </div>
     </section>
