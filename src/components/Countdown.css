@@ -51,13 +51,11 @@
   font-family: 'Courier New', monospace;
 }
 
-/* Cada segmento: suficientemente ancho para que "Segundos" quepa */
 .time-segment {
-  flex: 1 1 70px;  /* base mínimo 70px */
+  flex: 1 1 70px;
   min-width: 70px;
 }
 
-/* Etiqueta con palabra que puede romperse si es necesario */
 .time-label {
   font-size: 1rem;
   font-weight: 700;
@@ -114,12 +112,12 @@
   }
 
   .timer {
-    font-size: 1.8rem; /* font-size más pequeño para móvil */
+    font-size: 1.8rem;
     gap: 1rem;
   }
 
   .time-segment {
-    flex: 1 1 50px; /* menos ancho mínimo */
+    flex: 1 1 50px;
     min-width: 50px;
   }
 

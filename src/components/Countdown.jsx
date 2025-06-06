@@ -7,7 +7,14 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
     const now = new Date();
     const diff = targetDate - now;
 
-    if (diff <= 0) return null;
+    if (diff <= 0) {
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    }
 
     return {
       days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -19,25 +26,30 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
-  // Usamos setTimeout recursivo para mejor soporte en móviles
   useEffect(() => {
-    let timer;
+    let animationFrameId;
 
-    const tick = () => {
-      const newTimeLeft = calculateTimeLeft();
-      console.log('Countdown update:', newTimeLeft);
-      setTimeLeft(newTimeLeft);
-      if (newTimeLeft) {
-        timer = setTimeout(tick, 1000);
-      }
+    const update = () => {
+      setTimeLeft(calculateTimeLeft());
+      animationFrameId = requestAnimationFrame(() => {
+        setTimeout(update, 1000);
+      });
     };
 
-    tick();
+    update();
 
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [weddingDate]);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
+
+  const isTimeZero =
+    timeLeft?.days === 0 &&
+    timeLeft?.hours === 0 &&
+    timeLeft?.minutes === 0 &&
+    timeLeft?.seconds === 0;
 
   return (
     <section className="background-fullscreen" aria-live="polite">
@@ -50,10 +62,10 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
         />
 
         <h2 className="countdown-title" role="heading" aria-level="2">
-          {timeLeft ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
+          {!isTimeZero ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
         </h2>
 
-        {timeLeft ? (
+        {!isTimeZero ? (
           <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
             <div className="time-segment">
               <div className="time-label">Días</div>
@@ -77,13 +89,13 @@ export default function Countdown({ weddingDate = '2025-12-05' }) {
         )}
 
         <p className="sub-message">
-          {timeLeft ? '¡Prepara todo para celebrar el amor!' : 'Disfruta cada momento'}
+          {!isTimeZero ? '¡Prepara todo para celebrar el amor!' : 'Disfruta cada momento'}
         </p>
 
-        {timeLeft && (
+        {!isTimeZero && (
           <button
             onClick={() => {
-              document.getElementById("rsvp").scrollIntoView({ behavior: "smooth" });
+              document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
             }}
             className="cta-button"
             type="button"
