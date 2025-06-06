@@ -1,42 +1,44 @@
 import { useEffect, useState } from 'react';
-import { DateTime } from 'luxon';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const calculateTimeLeft = () => {
-    const targetDate = DateTime.fromISO(weddingDate, {
-      zone: 'America/Argentina/Buenos_Aires',
-    });
-    const now = DateTime.now().setZone('America/Argentina/Buenos_Aires');
-
-    const diff = targetDate.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
-
-    if (diff.seconds <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    return {
-      days: Math.floor(diff.days),
-      hours: Math.floor(diff.hours),
-      minutes: Math.floor(diff.minutes),
-      seconds: Math.floor(diff.seconds),
-    };
-  };
-
+  const [isClient, setIsClient] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const targetDate = new Date(weddingDate);
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      };
+    };
+
+    setTimeLeft(calculateTimeLeft());
+
     const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
-    // Ejecutar al menos una vez apenas carga
-    setTimeLeft(calculateTimeLeft());
-
     return () => clearInterval(interval);
-  }, [weddingDate]);
+  }, [isClient, weddingDate]);
 
-  if (!timeLeft) return null; // Evita renderizado inicial incorrecto
+  if (!isClient || !timeLeft) return null;
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -55,11 +57,9 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
           className="countdown-icon"
           aria-hidden="true"
         />
-
         <h2 className="countdown-title" role="heading" aria-level="2">
           {!isTimeZero ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
         </h2>
-
         {!isTimeZero ? (
           <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
             <div className="time-segment">
@@ -82,11 +82,9 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
         ) : (
           <p className="final-message">¡Felicidades a los novios!</p>
         )}
-
         <p className="sub-message">
           {!isTimeZero ? '¡Prepara todo para celebrar el amor!' : 'Disfruta cada momento'}
         </p>
-
         {!isTimeZero && (
           <button
             onClick={() => {
