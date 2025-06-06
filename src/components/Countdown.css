@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@600&family=Playfair+Display:wght@700&display=swap');
+
+.background-fullscreen {
+  background: linear-gradient(135deg, #fcefee 0%, #f6e1e1 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.countdown-container {
+  background-color: #fff8f8;
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-icon {
+  max-width: 90px;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+
+.countdown-title {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif;
+  color: #a33636;
+}
+
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: 900;
+  background: #f8d7d7;
+  border-radius: 15px;
+  padding: 1rem 0;
+  color: #a33636;
+  margin-bottom: 1.5rem;
+  user-select: none;
+  flex-wrap: wrap;
+  transition: all 0.3s ease-in-out;
+  font-family: 'Courier New', monospace;
+}
+
+.time-segment {
+  min-width: 60px;
+  flex: 1 1 60px;
+}
+
+.time-label {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.sub-message {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #8b4a4a;
+  margin-bottom: 2rem;
+  font-family: 'Lora', serif;
+}
+
+.final-message {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cta-button {
+  background-color: #a33636;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(163, 54, 54, 0.5);
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  display: block;
+}
+
+.cta-button:hover,
+.cta-button:focus {
+  background-color: #7a2525;
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .countdown-container {
+    padding: 2rem 1rem;
+  }
+
+  .countdown-title {
+    font-size: 2rem;
+  }
+
+  .timer {
+    font-size: 2rem;
+    gap: 1rem;
+  }
+
+  .time-segment {
+    min-width: 50px;
+    flex: 1 1 50px;
+  }
+
+  .sub-message {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+  }
+
+  .countdown-icon {
+    max-width: 70px;
+    margin-bottom: 1rem;
+  }
+}

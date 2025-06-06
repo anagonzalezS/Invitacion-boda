@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background-color: #fff5f8;
+  color: #333;
+}
+   html {
+  scroll-behavior: smooth;
+}

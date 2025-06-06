@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Lora&family=Playfair+Display&display=swap');
+
+.event-section {
+  background-color: #fff;
+  padding: 80px 20px;
+  border-top: 1px solid #eee;
+}
+
+.event-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.event-frase {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: #dc3545;
+  margin-bottom: 0.5rem;
+}
+
+.event-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.event-subtitle {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 3rem;
+}
+
+.event-card {
+  background-color: #fafafa;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.event-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.event-info {
+  font-family: 'Lora', serif;
+  font-size: 1.15rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.map-container {
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  height: 340px;
+  margin-top: 2rem;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: none;
+  border-radius: 12px;
+}
+
+/* Sección de regalos */
+.gift-section {
+  margin-top: 4rem;
+  padding: 30px 20px;
+  background-color: #fdf8f8;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.03);
+}
+
+.gift-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.gift-text,
+.gift-alias,
+.gift-cbu {
+  font-family: 'Lora', serif;
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+/* Botón de Mercado Pago */
+.btn-donar {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #00a650;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-family: 'Lora', serif;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+.btn-donar:hover {
+  background-color: #007e3a;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .event-section {
+    padding: 40px 15px;
+  }
+
+  .event-title {
+    font-size: 2rem;
+  }
+
+  .event-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .event-card {
+    padding: 20px;
+  }
+
+  .map-container {
+    height: 220px;
+  }
+
+  .event-frase {
+    font-size: 1.3rem;
+  }
+
+  .event-info {
+    font-size: 1rem;
+  }
+
+  .event-card-title {
+    font-size: 1.5rem;
+  }
+
+  .btn-donar {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+.copy-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.copy-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.copy-icon:hover {
+  color: #2e7d32; /* verde sutil */
+}
+
