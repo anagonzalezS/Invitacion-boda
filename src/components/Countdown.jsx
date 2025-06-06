@@ -2,17 +2,7 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const [mounted, setMounted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [timeLeft, setTimeLeft] = useState(null);
 
   const calculateTimeLeft = () => {
     const targetDate = new Date(weddingDate);
@@ -37,17 +27,19 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
   };
 
   useEffect(() => {
-    if (!mounted) return;
-
-    // Actualiza el tiempo inmediatamente para que no haya delay
+    // Primero actualiza el tiempo al montar
     setTimeLeft(calculateTimeLeft());
 
+    // Actualiza cada segundo
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [weddingDate, mounted]);
+  }, [weddingDate]);
+
+  // Mientras se calcula la primera vez (en SSR o primera render), no renderices nada
+  if (timeLeft === null) return null;
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -56,8 +48,6 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     timeLeft.hours === 0 &&
     timeLeft.minutes === 0 &&
     timeLeft.seconds === 0;
-
-  if (!mounted) return null; // No renderizamos nada hasta estar en cliente
 
   return (
     <section className="background-fullscreen" aria-live="polite">
