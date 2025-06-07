@@ -1,44 +1,33 @@
 import { useEffect, useState } from 'react';
 import './Countdown.css';
 
-export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
-  const [isClient, setIsClient] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(null);
+export default function Countdown() {
+  const birthdayDate = new Date('2025-10-10T00:00:00');
+  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  function getTimeRemaining() {
+    const now = new Date();
+    const diff = birthdayDate - now;
 
-  useEffect(() => {
-    if (!isClient) return;
+    if (diff <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
 
-    const calculateTimeLeft = () => {
-      const now = new Date();
-      const targetDate = new Date(weddingDate);
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      }
-
-      return {
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      };
+    return {
+      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((diff / (1000 * 60)) % 60),
+      seconds: Math.floor((diff / 1000) % 60),
     };
+  }
 
-    setTimeLeft(calculateTimeLeft());
-
+  useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(getTimeRemaining());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isClient, weddingDate]);
-
-  if (!isClient || !timeLeft) return null;
+  }, []);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
@@ -53,12 +42,12 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
       <div className="countdown-container">
         <img
           src="/anillos.gif"
-          alt="Anillos de boda animados"
+          alt="Anillos de cumpleaños animados"
           className="countdown-icon"
           aria-hidden="true"
         />
         <h2 className="countdown-title" role="heading" aria-level="2">
-          {!isTimeZero ? '¡La boda está por llegar!' : '¡Hoy es el gran día! 🎉'}
+          {!isTimeZero ? '¡El cumpleaños se acerca!' : '¡Hoy es el gran día! 🎉'}
         </h2>
         {!isTimeZero ? (
           <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
@@ -80,22 +69,11 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
             </div>
           </div>
         ) : (
-          <p className="final-message">¡Felicidades a los novios!</p>
+          <p className="final-message">¡Feliz cumpleaños! 🎂🎈</p>
         )}
         <p className="sub-message">
-          {!isTimeZero ? '¡Prepara todo para celebrar el amor!' : 'Disfruta cada momento'}
+          {!isTimeZero ? '¡Prepará todo para celebrar!' : 'Disfrutá tu día 💖'}
         </p>
-        {!isTimeZero && (
-          <button
-            onClick={() => {
-              document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="cta-button"
-            type="button"
-          >
-            Reservá tu lugar
-          </button>
-        )}
       </div>
     </section>
   );
