@@ -2,9 +2,16 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
+  const [isClient, setIsClient] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const calculateTimeLeft = () => {
       const now = new Date();
       const targetDate = new Date(weddingDate);
@@ -29,9 +36,9 @@ export default function Countdown({ weddingDate = '2025-12-05T00:00:00' }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [weddingDate]);
+  }, [isClient, weddingDate]);
 
-  if (!timeLeft) return null;
+  if (!isClient || !timeLeft) return null;
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
