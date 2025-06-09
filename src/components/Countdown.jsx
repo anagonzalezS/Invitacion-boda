@@ -2,30 +2,39 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  // 🟢 Usamos el formato local para evitar errores en móviles
-  const weddingDate = new Date(2025, 9, 10, 0, 0, 0);
-  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
+  const weddingDate = new Date(2025, 9, 10, 0, 0, 0); // Octubre es mes 9 (0 indexado)
 
-  function getTimeRemaining() {
-    const now = new Date();
-    const diff = weddingDate - now;
-
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
-    };
-  }
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   useEffect(() => {
+    function getTimeRemaining() {
+      const now = new Date();
+      const diff = weddingDate - now;
+
+      if (diff <= 0) {
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      }
+
+      return {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      };
+    }
+
+    // Actualizar al cargar
+    setTimeLeft(getTimeRemaining());
+
     const interval = setInterval(() => {
       setTimeLeft(getTimeRemaining());
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -46,12 +55,12 @@ export default function Countdown() {
           className="countdown-icon"
           aria-hidden="true"
         />
-        <h2 className="countdown-title" role="heading" aria-level="2">
-          {!isTimeZero ? '¡Nuestra boda se acerca!' : '¡Hoy celebramos el amor! 💍'}
+        <h2 className="countdown-title">
+          {isTimeZero ? '¡Hoy celebramos el amor! 💍' : '¡Nuestra boda se acerca!'}
         </h2>
 
         {!isTimeZero ? (
-          <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
+          <div role="timer" className="timer">
             <div className="time-segment">
               <div className="time-label">Días</div>
               {formatNumber(timeLeft.days)}
@@ -74,9 +83,9 @@ export default function Countdown() {
         )}
 
         <p className="sub-message">
-          {!isTimeZero
-            ? 'Contamos los días para compartir este momento con vos.'
-            : 'Gracias por ser parte de este día inolvidable.'}
+          {isTimeZero
+            ? 'Gracias por ser parte de este día inolvidable.'
+            : 'Contamos los días para compartir este momento con vos.'}
         </p>
 
         {!isTimeZero && (
