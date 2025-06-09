@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const weddingDate = new Date('2025-10-10T00:00:00');
+  // 🟢 Usamos el formato local para evitar errores en móviles
+  const weddingDate = new Date(2025, 9, 10, 0, 0, 0);
   const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
 
   function getTimeRemaining() {
@@ -79,20 +80,19 @@ export default function Countdown() {
         </p>
 
         {!isTimeZero && (
-        <a
-        href="#rsvp"
-        className="cta-button"
-        onClick={(e) => {
-          e.preventDefault();
-          const rsvpSection = document.getElementById('rsvp');
-          if (rsvpSection) {
-            rsvpSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
-      >
-        Confirmar asistencia
-      </a>
-
+          <a
+            href="#rsvp"
+            className="cta-button"
+            onClick={(e) => {
+              e.preventDefault();
+              const rsvpSection = document.getElementById('rsvp');
+              if (rsvpSection) {
+                rsvpSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          >
+            Confirmar asistencia
+          </a>
         )}
       </div>
     </section>
