@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const birthdayDate = new Date('2025-10-10T00:00:00');
+  const weddingDate = new Date('2025-10-10T00:00:00');
   const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
 
   function getTimeRemaining() {
     const now = new Date();
-    const diff = birthdayDate - now;
+    const diff = weddingDate - now;
 
     if (diff <= 0) {
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -25,7 +25,6 @@ export default function Countdown() {
     const interval = setInterval(() => {
       setTimeLeft(getTimeRemaining());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -42,13 +41,14 @@ export default function Countdown() {
       <div className="countdown-container">
         <img
           src="/anillos.gif"
-          alt="Anillos de cumpleaños animados"
+          alt="Anillos de boda animados"
           className="countdown-icon"
           aria-hidden="true"
         />
         <h2 className="countdown-title" role="heading" aria-level="2">
-          {!isTimeZero ? '¡El cumpleaños se acerca!' : '¡Hoy es el gran día! 🎉'}
+          {!isTimeZero ? '¡Nuestra boda se acerca!' : '¡Hoy celebramos el amor! 💍'}
         </h2>
+
         {!isTimeZero ? (
           <div role="timer" aria-atomic="true" aria-live="assertive" className="timer">
             <div className="time-segment">
@@ -69,11 +69,31 @@ export default function Countdown() {
             </div>
           </div>
         ) : (
-          <p className="final-message">¡Feliz cumpleaños! 🎂🎈</p>
+          <p className="final-message">¡Es el día más esperado de nuestras vidas! 💕</p>
         )}
+
         <p className="sub-message">
-          {!isTimeZero ? '¡Prepará todo para celebrar!' : 'Disfrutá tu día 💖'}
+          {!isTimeZero
+            ? 'Contamos los días para compartir este momento con vos.'
+            : 'Gracias por ser parte de este día inolvidable.'}
         </p>
+
+        {!isTimeZero && (
+        <a
+        href="#rsvp"
+        className="cta-button"
+        onClick={(e) => {
+          e.preventDefault();
+          const rsvpSection = document.getElementById('rsvp');
+          if (rsvpSection) {
+            rsvpSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        Confirmar asistencia
+      </a>
+
+        )}
       </div>
     </section>
   );
