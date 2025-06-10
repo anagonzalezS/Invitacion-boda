@@ -2,12 +2,20 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const weddingDate = new Date('2025-10-10T00:00:00');
+const weddingDate = new Date('2025-10-10T00:00:00');
 
-  const getTimeRemaining = () => {
-    const now = new Date();
-    const total = weddingDate.getTime() - now.getTime();
+  // Estado para el tiempo restante
+  const [timeLeft, setTimeLeft] = useState({
+    total: 0,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
+  // Función para calcular el tiempo restante
+  function getTimeRemaining() {
+    const total = weddingDate - new Date();
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
@@ -20,11 +28,17 @@ export default function Countdown() {
       minutes,
       seconds,
     };
-  };
+  }
 
-  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
+  // Añadimos formato para que siempre muestre 2 dígitos
+  function formatNumber(num) {
+    return num.toString().padStart(2, '0');
+  }
 
   useEffect(() => {
+    // Inicializa el contador en el primer render
+    setTimeLeft(getTimeRemaining());
+
     const intervalId = setInterval(() => {
       const remaining = getTimeRemaining();
 
@@ -45,8 +59,6 @@ export default function Countdown() {
     return () => clearInterval(intervalId);
   }, []);
 
-  const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-
   return (
     <section className="background-fullscreen" aria-live="polite">
       <div className="countdown-container">
@@ -56,7 +68,9 @@ export default function Countdown() {
           className="countdown-icon"
         />
         <h2 className="countdown-title">
-          {timeLeft.total > 0 ? '¡Nuestra boda se acerca!' : '¡Hoy celebramos el amor! 💍'}
+          {timeLeft.total > 0
+            ? '¡Nuestra boda se acerca!'
+            : '¡Hoy celebramos el amor! 💍'}
         </h2>
 
         {timeLeft.total > 0 ? (
