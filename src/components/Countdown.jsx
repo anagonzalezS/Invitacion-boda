@@ -2,53 +2,42 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  // Fecha en UTC para evitar desajustes por zona horaria
   const weddingDate = new Date('2025-10-10T00:00:00Z');
 
   const getTimeRemaining = () => {
     const now = new Date();
-    const diff = weddingDate.getTime() - now.getTime();
+    const total = weddingDate.getTime() - now.getTime();
 
-    if (diff <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
 
     return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
+      total,
+      days,
+      hours,
+      minutes,
+      seconds,
     };
   };
 
   const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const intervalId = setInterval(() => {
       const remaining = getTimeRemaining();
       setTimeLeft(remaining);
 
-      // Si el tiempo llegó a cero, parar el intervalo
-      if (
-        remaining.days === 0 &&
-        remaining.hours === 0 &&
-        remaining.minutes === 0 &&
-        remaining.seconds === 0
-      ) {
-        clearInterval(timer);
+      if (remaining.total <= 0) {
+        clearInterval(intervalId);
       }
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(intervalId);
   }, []);
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-
-  const isTimeZero =
-    timeLeft.days === 0 &&
-    timeLeft.hours === 0 &&
-    timeLeft.minutes === 0 &&
-    timeLeft.seconds === 0;
 
   return (
     <section className="background-fullscreen" aria-live="polite">
@@ -57,13 +46,12 @@ export default function Countdown() {
           src="/anillos.gif"
           alt="Anillos de boda animados"
           className="countdown-icon"
-          aria-hidden="true"
         />
-        <h2 className="countdown-title" role="heading" aria-level="2">
-          {!isTimeZero ? '¡Nuestra boda se acerca!' : '¡Hoy celebramos el amor! 💍'}
+        <h2 className="countdown-title">
+          {timeLeft.total > 0 ? '¡Nuestra boda se acerca!' : '¡Hoy celebramos el amor! 💍'}
         </h2>
 
-        {!isTimeZero ? (
+        {timeLeft.total > 0 ? (
           <div role="timer" className="timer">
             <div className="time-segment">
               <div className="time-label">Días</div>
@@ -87,12 +75,12 @@ export default function Countdown() {
         )}
 
         <p className="sub-message">
-          {!isTimeZero
+          {timeLeft.total > 0
             ? 'Contamos los días para compartir este momento con vos.'
             : 'Gracias por ser parte de este día inolvidable.'}
         </p>
 
-        {!isTimeZero && (
+        {timeLeft.total > 0 && (
           <a
             href="#rsvp"
             className="cta-button"
