@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const weddingDate = new Date('2025-10-10T00:00:00Z');
+  const weddingDate = new Date('2025-10-10T00:00:00'); // Quité la Z para zona local
 
   const getTimeRemaining = () => {
     const now = new Date();
@@ -27,10 +27,18 @@ export default function Countdown() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const remaining = getTimeRemaining();
-      setTimeLeft(remaining);
 
       if (remaining.total <= 0) {
         clearInterval(intervalId);
+        setTimeLeft({
+          total: 0,
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        });
+      } else {
+        setTimeLeft(remaining);
       }
     }, 1000);
 
