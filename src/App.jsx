@@ -8,7 +8,6 @@ import Gallery from './components/Gallery';
 import Countdown from './components/Countdown';
 import RSVPForm from './components/RSVPForm';
 import Footer from './components/Footer';
-import MusicPlayer from './components/MusicPlayer'; // 👈 Importar
 
 function App() {
   useEffect(() => {
@@ -20,7 +19,6 @@ function App() {
 
   return (
     <div>
-      <MusicPlayer /> {/* 👈 Agregar el componente */}
       <Header />
       <div data-aos="fade-up"><Countdown /></div>
 
