@@ -24,15 +24,6 @@ export default function Countdown() {
   }
 
   useEffect(() => {
-    let intervalId;
-
-    try {
-      // Guardar el último inicio exitoso (opcional)
-      localStorage.setItem('countdownStart', Date.now().toString());
-    } catch (err) {
-      console.warn('LocalStorage inaccesible:', err);
-    }
-
     const updateCountdown = () => {
       const now = Date.now();
       const diff = weddingDate - now;
@@ -45,9 +36,8 @@ export default function Countdown() {
       }
     };
 
-    updateCountdown(); // Llamada inicial
-
-    intervalId = setInterval(updateCountdown, 1000);
+    updateCountdown(); // inicial
+    const intervalId = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
