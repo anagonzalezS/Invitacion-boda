@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const weddingDate = new Date('2025-10-10T00:00:00'); // Quité la Z para zona local
+  const weddingDate = new Date('2025-10-10T00:00:00');
 
   const getTimeRemaining = () => {
     const now = new Date();
