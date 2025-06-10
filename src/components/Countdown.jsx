@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-  const weddingDate = new Date('2025-10-10T00:00:00');
+  // Fecha en UTC para evitar desajustes por zona horaria
+  const weddingDate = new Date('2025-10-10T00:00:00Z');
 
   const getTimeRemaining = () => {
     const now = new Date();
@@ -24,7 +25,18 @@ export default function Countdown() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(getTimeRemaining());
+      const remaining = getTimeRemaining();
+      setTimeLeft(remaining);
+
+      // Si el tiempo llegó a cero, parar el intervalo
+      if (
+        remaining.days === 0 &&
+        remaining.hours === 0 &&
+        remaining.minutes === 0 &&
+        remaining.seconds === 0
+      ) {
+        clearInterval(timer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
