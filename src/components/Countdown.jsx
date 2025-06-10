@@ -1,17 +1,96 @@
 import { useEffect, useState } from 'react';
+import './Countdown.css';
 
-export default function TestTimer() {
-  const [count, setCount] = useState(0);
+export default function Countdown() {
+  const [timeLeft, setTimeLeft] = useState(null); // Inicia como null
+  const weddingDate = new Date('2025-10-10T00:00:00');
+
+  function getTimeRemaining() {
+    const total = weddingDate - new Date();
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
+    return { total, days, hours, minutes, seconds };
+  }
 
   useEffect(() => {
-    console.log('Effect mounted');
-    const intervalId = setInterval(() => {
-      console.log('Tick');
-      setCount(c => c + 1);
-    }, 1000);
+    if (typeof window === 'undefined') return; // Previene SSR/hidratación
+
+    const update = () => {
+      const remaining = getTimeRemaining();
+      setTimeLeft(remaining);
+    };
+
+    update(); // Primera llamada inmediata
+    const intervalId = setInterval(update, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  return <div>Count: {count}</div>;
+  function formatNumber(num) {
+    return num.toString().padStart(2, '0');
+  }
+
+  if (!timeLeft) {
+    return <div>Cargando...</div>; // Render inicial
+  }
+
+  return (
+    <section className="background-fullscreen" aria-live="polite">
+      <div className="countdown-container">
+        <img src="/anillos.gif" alt="Anillos de boda" className="countdown-icon" />
+        <h2 className="countdown-title">
+          {timeLeft.total > 0
+            ? '¡Nuestra boda se acerca!'
+            : '¡Hoy celebramos el amor! 💍'}
+        </h2>
+
+        {timeLeft.total > 0 ? (
+          <div role="timer" className="timer">
+            <div className="time-segment">
+              <div className="time-label">Días</div>
+              {formatNumber(timeLeft.days)}
+            </div>
+            <div className="time-segment">
+              <div className="time-label">Horas</div>
+              {formatNumber(timeLeft.hours)}
+            </div>
+            <div className="time-segment">
+              <div className="time-label">Min.</div>
+              {formatNumber(timeLeft.minutes)}
+            </div>
+            <div className="time-segment">
+              <div className="time-label">Seg.</div>
+              {formatNumber(timeLeft.seconds)}
+            </div>
+          </div>
+        ) : (
+          <p className="final-message">¡Es el día más esperado de nuestras vidas! 💕</p>
+        )}
+
+        <p className="sub-message">
+          {timeLeft.total > 0
+            ? 'Contamos los días para compartir este momento con vos.'
+            : 'Gracias por ser parte de este día inolvidable.'}
+        </p>
+
+        {timeLeft.total > 0 && (
+          <a
+            href="#rsvp"
+            className="cta-button"
+            onClick={(e) => {
+              e.preventDefault();
+              const rsvpSection = document.getElementById('rsvp');
+              if (rsvpSection) {
+                rsvpSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          >
+            Confirmar asistencia
+          </a>
+        )}
+      </div>
+    </section>
+  );
 }
