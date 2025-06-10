@@ -2,19 +2,9 @@ import { useEffect, useState } from 'react';
 import './Countdown.css';
 
 export default function Countdown() {
-const weddingDate = new Date('2025-10-10T00:00:00');
+  const weddingDate = new Date('2025-10-10T00:00:00');
 
-  // Estado para el tiempo restante
-  const [timeLeft, setTimeLeft] = useState({
-    total: 0,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  // Función para calcular el tiempo restante
-  function getTimeRemaining() {
+  const getTimeRemaining = () => {
     const total = weddingDate - new Date();
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
@@ -28,31 +18,42 @@ const weddingDate = new Date('2025-10-10T00:00:00');
       minutes,
       seconds,
     };
-  }
+  };
 
-  // Añadimos formato para que siempre muestre 2 dígitos
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const saved = localStorage.getItem('weddingCountdown');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Verificamos si el tiempo guardado aún no venció
+      if (parsed.total > 0) {
+        return parsed;
+      }
+    }
+    return getTimeRemaining();
+  });
+
   function formatNumber(num) {
     return num.toString().padStart(2, '0');
   }
 
   useEffect(() => {
-    // Inicializa el contador en el primer render
-    setTimeLeft(getTimeRemaining());
-
     const intervalId = setInterval(() => {
       const remaining = getTimeRemaining();
 
       if (remaining.total <= 0) {
         clearInterval(intervalId);
-        setTimeLeft({
+        const final = {
           total: 0,
           days: 0,
           hours: 0,
           minutes: 0,
           seconds: 0,
-        });
+        };
+        setTimeLeft(final);
+        localStorage.setItem('weddingCountdown', JSON.stringify(final));
       } else {
         setTimeLeft(remaining);
+        localStorage.setItem('weddingCountdown', JSON.stringify(remaining));
       }
     }, 1000);
 
