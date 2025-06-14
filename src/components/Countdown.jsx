@@ -24,7 +24,7 @@ export default function Countdown() {
   }
 
   useEffect(() => {
-    const updateCountdown = () => {
+    const intervalId = setInterval(() => {
       const now = Date.now();
       const diff = weddingDate - now;
       const updated = calculateTimeLeft(diff);
@@ -34,10 +34,7 @@ export default function Countdown() {
       if (updated.total <= 0) {
         clearInterval(intervalId);
       }
-    };
-
-    updateCountdown(); // inicial
-    const intervalId = setInterval(updateCountdown, 1000);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
